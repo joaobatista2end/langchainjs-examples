@@ -2,11 +2,25 @@
 
 import BaseContainer from '@/styleguide/container';
 import BaseTextarea from '@/styleguide/textarea';
+import { translate } from '@/utils/translate';
 import { useState } from 'react';
 
 export default function Home() {
   const [contentToTranslate, setContentToTranslate] = useState('');
   const [translatedContent, setTranslatedContent] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleTranslate = async () => {
+    try {
+      setLoading(true);
+      const response = await translate(contentToTranslate);
+      setTranslatedContent(response);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -42,9 +56,9 @@ export default function Home() {
           <div className="flex justify-end mt-4">
             <button
               className="bg-gray-200 text-gray-900 px-4 py-2 rounded"
-              onClick={() => console.log('Translate')}
+              onClick={() => handleTranslate() }
             >
-              Translate
+              { loading ? 'Wait...' : 'Translate' }
             </button>
           </div>
         </BaseContainer>
