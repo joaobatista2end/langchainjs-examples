@@ -1,5 +1,5 @@
 import { translateToEnglish } from '@/utils/translate';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Components } from 'react-markdown';
 import ReactMarkdown from 'react-markdown';
 import { Modal } from './Modal';
@@ -15,19 +15,14 @@ const markdownStyles = {
 
 type CurriculumViewerProps = {
   content: string;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
-export function CurriculumViewer({ content }: CurriculumViewerProps) {
+export function CurriculumViewer({ content, isOpen, onClose }: CurriculumViewerProps) {
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedContent, setTranslatedContent] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (content) {
-      setIsModalOpen(true);
-    }
-  }, [content]);
 
   const handleCopyContent = async () => {
     const currentContent = translatedContent || content;
@@ -105,8 +100,8 @@ export function CurriculumViewer({ content }: CurriculumViewerProps) {
 
   return (
     <Modal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
+      isOpen={isOpen}
+      onClose={onClose}
       title="Visualização do Currículo"
       actions={modalActions}
     >
