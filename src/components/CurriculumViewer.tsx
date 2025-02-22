@@ -1,7 +1,8 @@
 import { translateToEnglish } from '@/utils/translate';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Components } from 'react-markdown';
 import ReactMarkdown from 'react-markdown';
+import { Modal } from './Modal';
 
 const markdownStyles = {
   h1: 'text-[14px] font-bold mb-2',
@@ -19,7 +20,25 @@ type CurriculumViewerProps = {
 export function CurriculumViewer({ content }: CurriculumViewerProps) {
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedContent, setTranslatedContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (content) {
+      setIsModalOpen(true);
+    }
+  }, [content]);
+
+  const handleCopyContent = async () => {
+    const currentContent = translatedContent || content;
+    try {
+      await navigator.clipboard.writeText(currentContent);
+      alert('Conteúdo copiado com sucesso!');
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+      alert('Erro ao copiar o conteúdo');
+    }
+  };
 
   const handleDownloadPDF = async (isEnglish = false) => {
     if (!contentRef.current) return;
@@ -32,7 +51,7 @@ export function CurriculumViewer({ content }: CurriculumViewerProps) {
       filename,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
     };
 
     html2pdf().set(opt).from(contentRef.current).save();
@@ -60,36 +79,44 @@ export function CurriculumViewer({ content }: CurriculumViewerProps) {
     li: ({ ...props }) => <li className={markdownStyles.li} {...props} />,
   };
 
-  return (
-    <div className="mt-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Currículo Gerado</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleDownloadPDF(false)}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-2"
-          >
-            <span>📥</span> Download PDF
-          </button>
-          <button
-            onClick={handleTranslateAndDownload}
-            disabled={isTranslating}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-2 disabled:bg-blue-300"
-          >
-            {isTranslating ? 'Traduzindo...' : '🌎 Download in English'}
-          </button>
-        </div>
-      </div>
-      <div 
-        ref={contentRef}
-        className="bg-white p-4 rounded-lg shadow-md"
+  const modalActions = (
+    <div className="flex justify-end gap-2">
+      <button
+        onClick={handleCopyContent}
+        className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-2"
       >
-        <div className="prose prose-sm max-w-none mx-2">
+        📋 Copiar Conteúdo
+      </button>
+      <button
+        onClick={() => handleDownloadPDF(false)}
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-2"
+      >
+        <span>📥</span> Download PDF
+      </button>
+      <button
+        onClick={handleTranslateAndDownload}
+        disabled={isTranslating}
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-2 disabled:bg-blue-300"
+      >
+        {isTranslating ? 'Traduzindo...' : '🌎 Download in English'}
+      </button>
+    </div>
+  );
+
+  return (
+    <Modal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      title="Visualização do Currículo"
+      actions={modalActions}
+    >
+      <div ref={contentRef} className="bg-white rounded-lg min-h-[60vh]">
+        <div className="prose prose-sm max-w-none">
           <ReactMarkdown components={components}>
             {translatedContent || content}
           </ReactMarkdown>
         </div>
       </div>
-    </div>
+    </Modal>
   );
-} 
+}
