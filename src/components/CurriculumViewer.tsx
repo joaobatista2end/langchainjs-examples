@@ -1,26 +1,24 @@
-import html2pdf from 'html2pdf.js';
 import { useRef } from 'react';
 import type { Components } from 'react-markdown';
 import ReactMarkdown from 'react-markdown';
 
-type CurriculumViewerProps = {
-  content: string;
-};
 
 const markdownStyles = {
-  h1: 'text-2xl font-bold mb-4',
-  h2: 'text-xl font-semibold mb-3',
-  h3: 'text-lg font-medium mb-2',
-  p: 'mb-4',
-  ul: 'list-disc pl-5 mb-4',
-  li: 'mb-1',
+  h1: 'text-[14px] font-bold mb-2',
+  h2: 'text-[14px] font-semibold mb-2',
+  h3: 'text-[14px] font-medium mb-2',
+  p: 'text-[12px] mb-2',
+  ul: 'list-disc pl-4 mb-2 text-[12px]',
+  li: 'mb-1 text-[12px]',
 } as const;
 
 export function CurriculumViewer({ content }: CurriculumViewerProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     if (!contentRef.current) return;
+
+    const html2pdf = (await import('html2pdf.js')).default;
 
     const opt = {
       margin: 1,
@@ -55,9 +53,9 @@ export function CurriculumViewer({ content }: CurriculumViewerProps) {
       </div>
       <div 
         ref={contentRef}
-        className="bg-white p-8 rounded-lg shadow-md"
+        className="bg-white p-4 rounded-lg shadow-md"
       >
-        <div className="prose prose-sm sm:prose lg:prose-lg max-w-none">
+        <div className="prose prose-sm max-w-none mx-2">
           <ReactMarkdown components={components}>
             {content}
           </ReactMarkdown>

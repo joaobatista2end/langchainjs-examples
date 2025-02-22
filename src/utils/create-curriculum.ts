@@ -30,12 +30,14 @@ Gere um currículo que:
 - Use métricas concretas (ex: "35% mais rápido")
 - Formatação ATS-friendly
 - Destaque {differentiator}
-- Não use emojis, ícones ou símbolos especiais (incluindo 📧, 📱, 📍, etc.)
+- Não use emojis, ícones ou símbolos especiais
 - Use formatação simples para contatos: "Email:", "Tel:", etc.
-- Não inclua textos de fechamento como "Fim do Curriculum Vitae" ou similares
-- Retorne apenas o conteúdo do currículo, sem textos adicionais no início ou fim
+- Liste competências e habilidades horizontalmente, separadas por vírgula
+- Mantenha o currículo conciso, preferencialmente em uma página
+- Não inclua textos de fechamento
+- Retorne apenas o conteúdo do currículo, sem textos adicionais
 
-Saída (apenas o currículo em markdown puro, sem textos de fechamento ou formatações especiais):
+Saída (currículo em markdown, formato conciso):
 `;
 
 // 2. Configuração do Prompt
