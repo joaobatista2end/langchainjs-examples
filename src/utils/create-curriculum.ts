@@ -30,8 +30,12 @@ Gere um currículo que:
 - Use métricas concretas (ex: "35% mais rápido")
 - Formatação ATS-friendly
 - Destaque {differentiator}
+- Não use emojis, ícones ou símbolos especiais (incluindo 📧, 📱, 📍, etc.)
+- Use formatação simples para contatos: "Email:", "Tel:", etc.
+- Não inclua textos de fechamento como "Fim do Curriculum Vitae" ou similares
+- Retorne apenas o conteúdo do currículo, sem textos adicionais no início ou fim
 
-Saída (em markdown):
+Saída (apenas o currículo em markdown puro, sem textos de fechamento ou formatações especiais):
 `;
 
 // 2. Configuração do Prompt
@@ -98,10 +102,13 @@ export async function generateTargetedResume(
   }
 ): Promise<string> {
   const projectsText = userData.projects
-    .map(p => `- ${p.name} (${p.githubUrl})
-    Tecnologias: ${p.technologies}
-    ${p.description}`)
-    .join('\n');
+    .map(p => `### ${p.name}
+[Link do Projeto](${p.githubUrl})
+
+**Tecnologias:** ${p.technologies}
+
+${p.description}`)
+    .join('\n\n');
 
   const input = await prompt.format({
     name: personalInfo.name,

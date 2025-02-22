@@ -1,5 +1,6 @@
 'use client';
 
+import { CurriculumViewer } from '@/components/CurriculumViewer';
 import { Tooltip } from '@/components/Tooltip';
 import { generateTargetedResume } from '@/utils/create-curriculum';
 import { useEffect, useState } from 'react';
@@ -529,14 +530,7 @@ export default function ResumeGenerator() {
         </button>
       </form>
 
-      {result && (
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Currículo Gerado</h2>
-          <div className="bg-gray-100 p-4 rounded">
-            <pre className="whitespace-pre-wrap">{result}</pre>
-          </div>
-        </div>
-      )}
+      {result && <CurriculumViewer content={result} />}
     </div>
   );
 } 
