@@ -88,10 +88,8 @@ export default function ResumeGenerator() {
     setCurrentStep(prev => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
-
     try {
       const response = await generateTargetedResume(
         formData.jobDescription,
@@ -524,8 +522,7 @@ export default function ResumeGenerator() {
 
   return (
     <div className="container mx-auto px-4">
-      
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+      <form onSubmit={(e) => e.preventDefault()}>
         <Stepper
           steps={steps}
           currentStep={currentStep}

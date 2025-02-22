@@ -105,7 +105,7 @@ export function CurriculumViewer({ content, isOpen, onClose }: CurriculumViewerP
       title="Visualização do Currículo"
       actions={modalActions}
     >
-      <div ref={contentRef} className="bg-white rounded-lg min-h-[60vh]">
+      <div ref={contentRef} className="bg-white rounded-lg p-4 min-h-[60vh]">
         <div className="prose prose-sm max-w-none">
           <ReactMarkdown components={components}>
             {translatedContent || content}
